@@ -1,52 +1,29 @@
 #include <Novice.h>
+#include "SceneManager.h"
 
 const char kWindowTitle[] = "LE2B_21_ミヤザキ_ヤマト";
 
+#pragma warning(push)
+// C28251の警告(WinMain)を見なかったことにする
+#pragma warning(disable:28251)
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
+#pragma warning(pop)
 
 	// ライブラリの初期化
 	Novice::Initialize(kWindowTitle, 1280, 720);
 
-	// キー入力結果を受け取る箱
-	char keys[256] = {0};
-	char preKeys[256] = {0};
+	// シーン管理クラスのインスタンスの作成
+	SceneManager* sceneManger_ = new SceneManager();
 
 	// ウィンドウの×ボタンが押されるまでループ
-	while (Novice::ProcessMessage() == 0) {
-		// フレームの開始
-		Novice::BeginFrame();
-
-		// キー入力を受け取る
-		memcpy(preKeys, keys, 256);
-		Novice::GetHitKeyStateAll(keys);
-
-		///
-		/// ↓更新処理ここから
-		///
-
-		///
-		/// ↑更新処理ここまで
-		///
-
-		///
-		/// ↓描画処理ここから
-		///
-
-		///
-		/// ↑描画処理ここまで
-		///
-
-		// フレームの終了
-		Novice::EndFrame();
-
-		// ESCキーが押されたらループを抜ける
-		if (preKeys[DIK_ESCAPE] == 0 && keys[DIK_ESCAPE] != 0) {
-			break;
-		}
-	}
+	sceneManger_->Run();
 
 	// ライブラリの終了
 	Novice::Finalize();
+
+	// 開放
+	delete sceneManger_;
+
 	return 0;
 }
